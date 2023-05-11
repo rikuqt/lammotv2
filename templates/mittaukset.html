@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+    <h1>Tuotteet</h1>
+   <body>
+      <table border = 1>
+         {% for p in result %}
+            <tr>
+               <th> {{ p['alfa'] }} </th>
+               <td> {{ p['cpu'] }} </td>
+               <td> {{ p['cpupros'] }} </td>
+               <td> {{ p['ram'] }} </td>
+               <td> {{p['rampros']}}</td>
+            </tr>            
+         {% endfor %}
+      </table>
+      
+   </body>
+</html>
