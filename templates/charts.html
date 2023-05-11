@@ -2,41 +2,40 @@
 <html>
 <head>
 	<title>My HTML Page</title>
-	<script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<script>
 		// Load the Google Charts library
 		google.charts.load('current', {'packages':['corechart']});
 
-		// Connect to the SocketIO server
-		var socket = io.connect('https://lammotv2.azurewebsites.net');
+		// When the page is loaded, create the chart and start updating it
+		google.charts.setOnLoadCallback(drawChart);
+		setInterval(updateChart, 5000); // Update every 5 seconds
 
-		// When the server sends a message, update the chart
-		socket.on('my_response', function(msg) {
-			var result = JSON.parse(msg.result);
-			console.log(result); // For debugging purposes only
+		// Define the chart and its options
+		var chart;
+		var options = {
+			title: 'CPU Usage over Time',
+			curveType: 'function',
+			legend: { position: 'bottom' }
+		};
 
-			// Create a new DataTable from the incoming data
+		function drawChart() {
+			// Create an empty DataTable for the chart
 			var dataTable = new google.visualization.DataTable();
 			dataTable.addColumn('number', 'Measurement');
 			dataTable.addColumn('number', 'CPU Usage');
-			for (var i = 0; i < result.length; i++) {
-				var row = [i+1, result[i][2]];
-				dataTable.addRow(row);
-			}
 
-			// Draw the chart using the DataTable
-			var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-			chart.draw(dataTable, {width: 400, height: 240});
-		});
-	</script>
-</head>
-<body>
-	<h1>Welcome to my page!</h1>
-	<p>This is a paragraph of text.</p>
+			// Draw the chart
+			chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+			chart.draw(dataTable, options);
+		}
 
-	<!-- Add a div for the chart to be drawn in -->
-	<div id="chart_div"></div>
-</body>
-</html>
+		function updateChart() {
+			// Fetch the data from the server using AJAX
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					var result = JSON.parse(this.responseText).result;
 
+					// Add the new data to the DataTable
+					var dataTable = chart.getData
