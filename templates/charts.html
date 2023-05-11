@@ -1,41 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>My HTML Page</title>
+	<meta charset="UTF-8">
+	<title>Google Charts with Flask</title>
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-	<script>
-		// Load the Google Charts library
+	<script type="text/javascript">
 		google.charts.load('current', {'packages':['corechart']});
-
-		// When the page is loaded, create the chart and start updating it
 		google.charts.setOnLoadCallback(drawChart);
-		setInterval(updateChart, 5000); // Update every 5 seconds
 
-		// Define the chart and its options
 		var chart;
-		var options = {
-			title: 'CPU Usage over Time',
-			curveType: 'function',
-			legend: { position: 'bottom' }
-		};
+		var dataTable;
 
 		function drawChart() {
-			// Create an empty DataTable for the chart
-			var dataTable = new google.visualization.DataTable();
+			dataTable = new google.visualization.DataTable();
 			dataTable.addColumn('number', 'Measurement');
-			dataTable.addColumn('number', 'CPU Usage');
+			dataTable.addColumn('number', 'Temperature');
 
-			// Draw the chart
 			chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+			var options = {
+				title: 'Temperature measurements',
+				hAxis: {
+					title: 'Measurement'
+				},
+				vAxis: {
+					title: 'Temperature (Celsius)'
+				},
+				legend: {
+					position: 'none'
+				}
+			};
+
 			chart.draw(dataTable, options);
+
+			setInterval(updateChart, 5000);
 		}
 
 		function updateChart() {
-			// Fetch the data from the server using AJAX
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = function() {
 				if (this.readyState == 4 && this.status == 200) {
-					var result = JSON.parse(this.responseText).result;
+					var result = JSON.parse(this.responseText);
+					dataTable.addRow([dataTable.getNumberOfRows()+1, result[result.length-1][2]]);
 
-					// Add the new data to the DataTable
-					var dataTable = chart.getData
+					chart.draw(dataTable, options);
+				}
+			};
+			xhttp.open("GET", "/data", true);
+			xhttp.send();
+		}
+	</script>
+</head>
+<body>
+	<div id="chart_div"></div>
+</body>
+</html>
