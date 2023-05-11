@@ -1,47 +1,24 @@
+<!DOCTYPE html>
 <html>
-    <head>
-      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-      <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
-      <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.min.js"></script>
-      <script type="text/javascript" charset="utf-8"></script>    
-      
-      <script type="text/javascript">
-        google.charts.load('current', {'packages':['corechart']});
-        google.charts.setOnLoadCallback(init);
+<head>
+	<title>My HTML Page</title>
+	<script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
+	<script>
+		// Connect to the SocketIO server
+		var socket = io.connect('https://lammotv2.azurewebsites.net');
 
-        function init() {
-          var socket = io();
-          socket.on('my_response', function (data) {
-            var s = JSON.parse(data.result);
-            console.log(s)
-            drawChart(s)
-          })
-        }
+		// When the server sends a message, update the chart
+		socket.on('my_response', function(msg) {
+			var result = JSON.parse(msg.result);
+			console.log(result); // For debugging purposes only
 
-        function drawChart(s) {
-          var data = new google.visualization.DataTable();
-            data.addColumn('number', 'Testikerrat');
-            data.addColumn('number', 'cputemp');
-            data.addColumn('number', 'cpupros');
-            data.addColumn('number', 'ramtemp');
-            data.addColumn('number', 'rampros');
-            data.addRows(s);
-  
-          var options = {
-            title: 'System monitoring (random)',
-            curveType: 'function',
-            legend: { position: 'bottom' }
-          };
-  
-          var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-  
-          chart.draw(data, options);
-        }
-      </script>
-    </head>
-    <body>
-        <h1>jooooo</h1>
-      <div id="curve_chart" style="width: 900px; height: 500px"></div>
-    </body>
-  </html>
+			// TODO: Update your chart with the new data here
+		});
+	</script>
+</head>
+<body>
+	<h1>Welcome to my page!</h1>
+	<p>This is a paragraph of text.</p>
+</body>
+</html>
   
