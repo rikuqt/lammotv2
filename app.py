@@ -6,6 +6,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
+measurements = []
 
 @app.route('/')
 def get_all_measurements_page():
