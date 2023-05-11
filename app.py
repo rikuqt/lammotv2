@@ -7,9 +7,6 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
 
-measurements = []
-pros = []
-
 @app.route('/')
 def get_all_measurements_page():
     return render_template('mittaukset.html', result = measurements)
